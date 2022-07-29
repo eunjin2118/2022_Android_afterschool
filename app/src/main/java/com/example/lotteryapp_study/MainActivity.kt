@@ -36,6 +36,7 @@ class MainActivity : AppCompatActivity() {
             lottoNumView.text = currentNums
         }
 
+        // 버튼만들기
         val saveNumberBtn = findViewById<Button>(R.id.save_num)
         saveNumberBtn.setOnClickListener {
             var lottoNums = pref.getString("lottonums", "")
