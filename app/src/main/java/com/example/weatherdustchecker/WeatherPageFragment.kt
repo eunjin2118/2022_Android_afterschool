@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.databind.DeserializationContext
@@ -15,6 +16,11 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import java.net.URL
 
 @JsonDeserialize(using = MyDeserializer::class)
@@ -77,63 +83,91 @@ class WeatherPageFragment : Fragment(){
         // TODO: ImageView 가져와서 sun 이미지 출력하기
 //        weatherImage.setImageResource(arguments?.getInt("res_id")!!)
 
-
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
         val lat = arguments?.getDouble("lat")
         val lon = arguments?.getDouble("lon")
-        val url = "https://api.openweathermap.org/data/2.5/weather?units=metric&appid=${APP_ID}&lat=${lat}&lon=${lon}"
+//        val url = "https://api.openweathermap.org/data/2.5/weather?units=metric&appid=${APP_ID}&lat=${lat}&lon=${lon}"
+        val retrofit = Retrofit.Builder()
+            .baseUrl("http://api.openweathermap.org")
+                // 응답을 역직렬할 때 변환함
+                // 변환 할 때 무엇을 쓸 것인지 물어보는것 =>
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
 
-        APICall(object : APICall.APICallback{
-            override fun onComplete(result: String) {
-                Log.d("mytag", result)
+        val apiService = retrofit.create(WeatherAPIService::class.java)
+        val apiCallForData = apiService.getWeatherStatusInfo(APP_ID, lat!!, lon!!)
+        apiCallForData.enqueue(object : Callback<OpenWeatherAPIJSONResponseGSON> {
+            // 성v
+            override fun onResponse(
+                call: Call<OpenWeatherAPIJSONResponseGSON>,
+                response: Response<OpenWeatherAPIJSONResponseGSON>
+            ) {
+                val data = response.body()
+                Log.d("mytag", data.toString())
 
-                var mapper = jacksonObjectMapper()
-
-                var data = mapper?.readValue<OpenWeatherAPIJSONResponse>(result)
-                temperatureText.text = data.temp.toString()
-
-                val id = data.id.toString()
-                if(id != null) {
-                    statusText.text = when {
-                        id.startsWith("2") -> {
-                            weatherImage.setImageResource(R.drawable.flash)
-                            "천둥, 번개"
-                        }
-                        id.startsWith("3") -> {
-                            weatherImage.setImageResource(R.drawable.rain)
-                            "이슬비"
-                        }
-                        id.startsWith("5") -> {
-                            weatherImage.setImageResource(R.drawable.rain)
-                            "비"
-                        }
-                        id.startsWith("6") -> {
-                            weatherImage.setImageResource(R.drawable.snow)
-                            "눈"
-                        }
-                        id.startsWith("7") -> {
-                            weatherImage.setImageResource(R.drawable.cloudy)
-                            "흐림"
-                        }
-                        id.equals("800") -> {
-                            weatherImage.setImageResource(R.drawable.sun)
-                            "화창"
-                        }
-                        id.startsWith("8") -> {
-                            weatherImage.setImageResource(R.drawable.cloud)
-                            "구름 낌"
-                        }
-                        else -> "알 수 없음"
-                    }
-                }
+                // TODO: 다시 날씨 화면 나오도록 코드 작성
+                val temp = data?.main?.get("temp")
+                val id = data?.weather?.get(0)?.get("id")
             }
-        }).execute(URL(url))
+
+            override fun onFailure(call: Call<OpenWeatherAPIJSONResponseGSON>, t: Throwable) {
+                Toast.makeText(activity,
+                "에러 발생 ${t.message}",
+                Toast.LENGTH_SHORT).show()
+            }
+
+        })
+
+//        APICall(object : APICall.APICallback{
+//            override fun onComplete(result: String) {
+//                Log.d("mytag", result)
+//
+//                var mapper = jacksonObjectMapper()
+//
+//                var data = mapper?.readValue<OpenWeatherAPIJSONResponse>(result)
+//                temperatureText.text = data.temp.toString()
+//
+//                val id = data.id.toString()
+//                if(id != null) {
+//                    statusText.text = when {
+//                        id.startsWith("2") -> {
+//                            weatherImage.setImageResource(R.drawable.flash)
+//                            "천둥, 번개"
+//                        }
+//                        id.startsWith("3") -> {
+//                            weatherImage.setImageResource(R.drawable.rain)
+//                            "이슬비"
+//                        }
+//                        id.startsWith("5") -> {
+//                            weatherImage.setImageResource(R.drawable.rain)
+//                            "비"
+//                        }
+//                        id.startsWith("6") -> {
+//                            weatherImage.setImageResource(R.drawable.snow)
+//                            "눈"
+//                        }
+//                        id.startsWith("7") -> {
+//                            weatherImage.setImageResource(R.drawable.cloudy)
+//                            "흐림"
+//                        }
+//                        id.equals("800") -> {
+//                            weatherImage.setImageResource(R.drawable.sun)
+//                            "화창"
+//                        }
+//                        id.startsWith("8") -> {
+//                            weatherImage.setImageResource(R.drawable.cloud)
+//                            "구름 낌"
+//                        }
+//                        else -> "알 수 없음"
+//                    }
+//                }
+//            }
+//        }).execute(URL(url))
     }
 
     companion object {

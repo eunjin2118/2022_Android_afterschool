@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.databind.DeserializationContext
@@ -15,6 +16,9 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
+import com.google.gson.GsonBuilder
+import retrofit2.*
+import retrofit2.converter.gson.GsonConverterFactory
 import java.net.URL
 
 @JsonDeserialize(using=DustCheckerResponseDeserializer::class)
@@ -80,30 +84,73 @@ class DustPageFragment : Fragment() {
 
         val lat = arguments?.getDouble("lat")
         val lon = arguments?.getDouble("lon")
-        val url = "http://api.waqi.info/feed/geo:${lat};${lon}/?token=${APP_TOKEN}"
-        Log.d("mytag", url)
-        APICall(object: APICall.APICallback {
-            override fun onComplete(result: String) {
-                Log.d("mytag", result)
 
-                var mapper = jacksonObjectMapper()
-                val data = mapper.readValue<DustCheckResponse>(result)
 
+//        val url = "http://api.waqi.info/feed/geo:${lat};${lon}/?token=${APP_TOKEN}"
+//        Log.d("mytag", url)
+//        APICall(object: APICall.APICallback {
+//            override fun onComplete(result: String) {
+//                Log.d("mytag", result)
+//
+//                var mapper = jacksonObjectMapper()
+//                val data = mapper.readValue<DustCheckResponse>(result)
+//
+//                Log.d("mytag", data.toString())
+//
+//                statusImage.setImageResource(when(data.pm25Status) {
+//                    "좋음" -> R.drawable.good
+//                    "보통" -> R.drawable.normal
+//                    "나쁨" -> R.drawable.bad
+//                    else -> R.drawable.very_bad
+//                })
+//                pm25IntensityText.text = data.pm25?.toString() ?: "알 수 없음"
+//                pm10IntensityText.text = data.pm10?.toString() ?: "알 수 없음"
+//
+//                pm25StatusText.text = "${data.pm25Status} (초미세먼지)"
+//                pm10StatusText.text = "${data.pm10Status} (미세먼지)"
+//            }
+//        }).execute(URL(url))
+
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://api.waqi.info")
+            .addConverterFactory(
+                GsonConverterFactory.create(
+                    GsonBuilder().registerTypeAdapter(
+                        DustCheckResponseGSON::class.java,
+                        DustCheckResponseDeserializerGSON()
+                    ).create()
+                )
+            )
+            .build()
+        val apiService = retrofit.create(DustAPIService::class.java)
+        val apiCallForData = apiService.getDustStatusInfo(lat!!, lon!!, APP_TOKEN)
+        apiCallForData.enqueue(object : Callback<DustCheckResponseGSON>{
+            override fun onResponse(
+                call: Call<DustCheckResponseGSON>,
+                response: Response<DustCheckResponseGSON>
+            ) {
+                val data = response.body()!!
                 Log.d("mytag", data.toString())
 
-                statusImage.setImageResource(when(data.pm25Status) {
+                // TODO : 화면 구성하기
+                statusImage.setImageResource(when(data.pm25Status){
                     "좋음" -> R.drawable.good
                     "보통" -> R.drawable.normal
                     "나쁨" -> R.drawable.bad
                     else -> R.drawable.very_bad
                 })
-                pm25IntensityText.text = data.pm25?.toString() ?: "알 수 없음"
-                pm10IntensityText.text = data.pm10?.toString() ?: "알 수 없음"
+                pm25IntensityText.text = data.pm25?.toString()
+                pm10IntensityText.text = data.pm10?.toString()
 
-                pm25StatusText.text = "${data.pm25Status} (초미세먼지)"
-                pm10StatusText.text = "${data.pm10Status} (미세먼지)"
             }
-        }).execute(URL(url))
+
+            override fun onFailure(call: Call<DustCheckResponseGSON>, t: Throwable) {
+                Toast.makeText(activity,
+                    "에러 발생 ${t.message}",
+                    Toast.LENGTH_SHORT).show()
+            }
+
+        })
     }
 
     companion object {
