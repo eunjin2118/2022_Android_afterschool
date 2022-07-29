@@ -14,11 +14,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         var result = findViewById<TextView>(R.id.result)
-
+        Log.d("mytag", "result")
         findViewById<Button>(R.id.btn).setOnClickListener {
             Toast.makeText(this,
                 "Clickde!",
                 Toast.LENGTH_SHORT).show()
+
         }
 
         findViewById<Button>(R.id.anr).setOnClickListener {
