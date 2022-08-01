@@ -1,6 +1,7 @@
 package com.example.githubusersearch
 
 import android.content.Context
+import android.content.Intent
 import android.location.LocationListener
 import android.location.LocationManager
 import androidx.appcompat.app.AppCompatActivity
@@ -49,7 +50,7 @@ class MainActivity : AppCompatActivity() {
         val apiService = retrofit.create(GitHubAPIService::class.java)
         button.setOnClickListener {
             val id = useridInput.text.toString()
-            val apiCallForData = apiService.getGitHubId(id, "token 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")
+            val apiCallForData = apiService.getGitHubId(id, "token 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")
             apiCallForData.enqueue(object : Callback<GitHubUser>{
                 override fun onResponse(call: Call<GitHubUser>, response: Response<GitHubUser>) {
                     Log.d("mytag", response.code().toString())
@@ -75,9 +76,16 @@ class MainActivity : AppCompatActivity() {
                 override fun onFailure(call: Call<GitHubUser>, t: Throwable) {
 
                 }
-
             })
         }
 
+        val userRepoSearch = findViewById<Button>(R.id.usersearch)
+        userRepoSearch.setOnClickListener {
+
+            val intent = Intent(this@MainActivity, GitHubUserRepositoryListActivity::class.java)
+            intent.putExtra("u_id", useridInput.text.toString())
+            startActivity(intent)
+
+        }
     }
 }
