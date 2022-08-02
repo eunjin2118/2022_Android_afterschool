@@ -18,10 +18,26 @@ class MainActivity : AppCompatActivity() {
         var drawerLayout = findViewById<DrawerLayout>(R.id.drawer_layout)
         val navView = findViewById<NavigationView>(R.id.drawer_nav_view)
 
+        supportFragmentManager
+            .beginTransaction()
+            .add(R.id.frame, QuizFragment())
+            .commit()
+
         navView.setNavigationItemSelectedListener {
             when(it.itemId){
-                R.id.quiz_solve -> Log.d("mytag", "퀴즈 풀기")
-                R.id.quiz_manage -> Log.d("mytag", "퀴즈 관리")
+                R.id.quiz_solve -> {
+                    supportFragmentManager
+                        .beginTransaction()
+                        .replace(R.id.frame, QuizFragment())
+                        .commit()
+                }
+
+                R.id.quiz_manage -> {
+                    supportFragmentManager
+                        .beginTransaction()
+                        .replace(R.id.frame, QuizListFragment())
+                        .commit()
+                }
             }
 
             drawerLayout.closeDrawers()
