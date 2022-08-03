@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.drawerlayout.widget.DrawerLayout
@@ -23,6 +24,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         db = QuizDatabase.getInstance(this)
+
+        Thread {
+            for (quiz in db.quizDAO().getAll()) {
+                Log.d("mytag", quiz.toString())
+            }
+        }.start()
 
 
         val sp : SharedPreferences = getSharedPreferences(
@@ -54,6 +61,12 @@ class MainActivity : AppCompatActivity() {
                     supportFragmentManager
                         .beginTransaction()
                         .replace(R.id.frame, QuizListFragment())
+                        .commit()
+                }
+                R.id.quiz_add -> {
+                    supportFragmentManager
+                        .beginTransaction()
+                        .replace(R.id.frame, QuizCreateFragment())
                         .commit()
                 }
             }
@@ -136,9 +149,9 @@ class MainActivity : AppCompatActivity() {
                         )
                     }
                 }
-                for(quiz in quizList){
-                    db.quizDAO().insert(quiz)
-                }
+            }
+            for(quiz in quizList){
+                db.quizDAO().insert(quiz)
             }
         }
     }

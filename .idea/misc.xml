@@ -5,8 +5,12 @@
       <map>
         <entry key="..\:/Users/Mirim/QuizQuiz/app/src/main/res/layout/activity_main.xml" value="0.38645833333333335" />
         <entry key="..\:/Users/Mirim/QuizQuiz/app/src/main/res/layout/nav_header.xml" value="0.38645833333333335" />
+        <entry key="..\:/Users/Mirim/QuizQuiz/app/src/main/res/layout/quiz_create_fragment.xml" value="0.3333333333333333" />
         <entry key="..\:/Users/Mirim/QuizQuiz/app/src/main/res/layout/quiz_fragment.xml" value="0.10005065856129686" />
         <entry key="..\:/Users/Mirim/QuizQuiz/app/src/main/res/layout/quiz_list_fragment.xml" value="0.1" />
+        <entry key="..\:/Users/Mirim/QuizQuiz/app/src/main/res/layout/quiz_result_fragment.xml" value="0.20208333333333334" />
+        <entry key="..\:/Users/Mirim/QuizQuiz/app/src/main/res/layout/quiz_solve_fragment.xml" value="0.20104166666666667" />
+        <entry key="..\:/Users/Mirim/QuizQuiz/app/src/main/res/layout/quiz_start_fragment.xml" value="0.20208333333333334" />
         <entry key="..\:/Users/Mirim/QuizQuiz/app/src/main/res/menu/nav_menu.xml" value="0.38645833333333335" />
       </map>
     </option>
