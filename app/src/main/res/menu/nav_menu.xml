@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/community"
+        android:title="커뮤니티"
+        android:icon="@android:drawable/ic_menu_view" />
+
+    <item
+        android:id="@+id/create_text"
+        android:title="글 쓰기"
+        android:icon="@android:drawable/ic_menu_zoom" />
+
+    <item
+        android:id="@+id/OpenChat"
+        android:title="오픈채팅"
+        android:icon="@android:drawable/ic_input_add" />
+</menu>
