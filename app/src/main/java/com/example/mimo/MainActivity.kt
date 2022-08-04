@@ -9,9 +9,12 @@ import com.example.mimo.MiMoCommunityFragment
 import com.example.mimo.MiMoCreateFragment
 import com.example.mimo.MiMoOpenChatFragment
 import com.example.mimo.R
+import com.example.mimo.database.MiMoDatabase
 import com.google.android.material.navigation.NavigationView
 
 class MainActivity : AppCompatActivity() {
+    lateinit var db: MiMoDatabase
+
     lateinit var navigationView: NavigationView
     lateinit var drawerToggle : ActionBarDrawerToggle
     lateinit var drawerLayout: DrawerLayout
@@ -19,6 +22,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        db = QuizDatabase.getInstance(this)
 
         val drawerLayout = findViewById<DrawerLayout>(R.id.drawer_layout)
         val navView = findViewById<NavigationView>(R.id.drawer_nav_view)
@@ -41,6 +46,13 @@ class MainActivity : AppCompatActivity() {
                     supportFragmentManager
                         .beginTransaction()
                         .replace(R.id.frame, MiMoOpenChatFragment())
+                        .commit()
+                }
+
+                R.id.Info -> {
+                    supportFragmentManager
+                        .beginTransaction()
+                        .replace(R.id.frame, MiMoInfoFragment())
                         .commit()
                 }
 

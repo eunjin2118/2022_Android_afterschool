@@ -16,4 +16,10 @@
         android:id="@+id/OpenChat"
         android:title="오픈채팅"
         android:icon="@android:drawable/ic_input_add" />
+
+    <item
+        android:id="@+id/Info"
+        android:title="소개"
+        android:icon="@android:drawable/ic_input_add" />
+
 </menu>

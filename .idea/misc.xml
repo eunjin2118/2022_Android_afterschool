@@ -4,8 +4,11 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/Mirim/MiMo/app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="..\:/Users/Mirim/MiMo/app/src/main/res/layout/create_info_fragment.xml" value="0.37771739130434784" />
+        <entry key="..\:/Users/Mirim/MiMo/app/src/main/res/layout/mimo_community_fragment.xml" value="0.37771739130434784" />
         <entry key="..\:/Users/Mirim/MiMo/app/src/main/res/layout/mimo_create_fragment.xml" value="0.1" />
         <entry key="..\:/Users/Mirim/MiMo/app/src/main/res/layout/mimo_fragment.xml" value="0.1879432624113475" />
+        <entry key="..\:/Users/Mirim/MiMo/app/src/main/res/layout/mimo_openchat_fragment.xml" value="0.37771739130434784" />
         <entry key="..\:/Users/Mirim/MiMo/app/src/main/res/layout/mimo_writing_fragment.xml" value="0.1879432624113475" />
         <entry key="..\:/Users/Mirim/MiMo/app/src/main/res/layout/nav_header.xml" value="0.13055555555555556" />
         <entry key="..\:/Users/Mirim/MiMo/app/src/main/res/menu/nav_menu.xml" value="0.38645833333333335" />
